@@ -47,3 +47,10 @@ The app will should be accessible at http://localhost:3000.
 - TypeScript: Style and syntax
 - TV Maze API: Used for searching and retrieving TV show data.
 - Material Tailwind: Used for styling the application.
+
+## Time constraints
+
+- Results without images are poorly displayed, with empty image containers
+- Results with long names are pootly presented without linebreaks
+- Detailed view should present more data and have image stack vertically on very narrow displays
+- Material Tailwind was a poor choice that should have been avoided
