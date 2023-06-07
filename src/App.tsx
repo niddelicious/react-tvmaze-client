@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './Layout';
 import SearchBar from './components/SearchBar';
 import SearchResults from './components/SearchResults';
@@ -6,14 +7,17 @@ import ShowDetails from './components/ShowDetails';
 
 const App: React.FC = () => {
   const [query, setQuery] = useState('');
-  const [showId, setShowId] = useState<number | null>(null);
 
   return (
-    <Layout>
-      <SearchBar onQueryChange={setQuery} />
-      <ShowDetails showId={showId} />
-      <SearchResults query={query} onShowClick={setShowId} />
-    </Layout>
+    <Router>
+      <Layout>
+        <SearchBar onQueryChange={setQuery} />
+        <Routes>
+          <Route path="/" element={<SearchResults query={query} />} />
+          <Route path="/show/:showId" element={<ShowDetails />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 };
 
