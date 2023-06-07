@@ -1,7 +1,7 @@
-import { Spinner } from "@material-tailwind/react";
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ShowCard from './ShowCard';
+import SpinnerComponent from './SpinnerComponent';
 
 type SearchResult = {
     score: number;
@@ -19,6 +19,7 @@ const SearchResults: React.FC = () => {
     const [results, setResults] = useState<SearchResult[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [hideSpinner, setHideSpinner] = useState(false);
     const navigate = useNavigate();
     const decodedQuery = decodeURIComponent(query || '');
 
@@ -32,7 +33,7 @@ const SearchResults: React.FC = () => {
         }
         else {
             setLoading(true);
-            setMessage('');
+            setMessage('Searching...');
 
             const controller = new AbortController();
             const signal = controller.signal;
@@ -42,7 +43,7 @@ const SearchResults: React.FC = () => {
             const fetchResults = async () => {
                 if (query) {
                     try {
-                        await timeout(0);
+                        await timeout(0); // for testing delays in API response
                         const response = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`, { signal });
                         const data = await response.json();
                         setResults(data);
@@ -50,6 +51,7 @@ const SearchResults: React.FC = () => {
                     } catch (error) {
                         if (error instanceof Error && error.name === 'AbortError') {
                             setMessage('The request was cancelled because it took too long.');
+                            setHideSpinner(true);
                         } else {
                             console.error(error);
                         }
@@ -57,10 +59,11 @@ const SearchResults: React.FC = () => {
                 }
             };
 
-            timeout1 = setTimeout(() => setMessage('The results are taking longer than expected...'), 5000);
+            timeout1 = setTimeout(() => setMessage('The results are taking longer than expected...'), 2000);
             timeout2 = setTimeout(() => {
                 setMessage('The request is taking too long, cancelling...');
-            }, 15000);
+                controller.abort();
+            }, 5000);
 
             fetchResults();
 
@@ -73,7 +76,7 @@ const SearchResults: React.FC = () => {
 
     return (
         <div className="flex flex-row flex-wrap gap-2 justify-evenly ">
-            {loading ? <div className="flex items-end gap-8"><Spinner className="h-12 w-12" /><p>{message}</p></div> : results.map(({ show }) => (
+            {loading ? (<SpinnerComponent message={message} hideSpinner={hideSpinner} />) : results.map(({ show }) => (
                 <ShowCard key={show.id} show={show} />
             ))}
         </div>
