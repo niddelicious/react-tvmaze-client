@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+    Navbar,
+    Button,
+    Input,
+} from "@material-tailwind/react";
 
 const SearchBar: React.FC = () => {
     const [query, setQuery] = useState('');
@@ -11,16 +16,25 @@ const SearchBar: React.FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex items-center justify-center">
-            <input
-                type="text"
-                value={query}
-                onChange={event => setQuery(event.target.value)}
-                placeholder="Search for a show..."
-                className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-            <button type="submit" className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Search</button>
-        </form>
+        <Navbar className="mx-auto max-w-screen-md px-4 py-3">
+            <div className="flex flex-wrap items-center justify-between gap-y-4 text-blue-gray-900">
+                <div className="relative w-full">
+                    <form onSubmit={handleSubmit} className="flex items-center justify-center">
+                        <Input
+                            type="text"
+                            value={query}
+                            onChange={event => setQuery(event.target.value)}
+                            label="Search for a show..."
+                            className="pr-20"
+                            containerProps={{
+                                className: "min-w-[288px]",
+                            }}
+                        />
+                        <Button size="sm" className="!absolute right-1 top-1 rounded" onClick={handleSubmit}>Search</Button>
+                    </form>
+                </div>
+            </div>
+        </Navbar>
     );
 };
 

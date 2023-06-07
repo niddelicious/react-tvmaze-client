@@ -6,8 +6,8 @@ type Props = {
 
 const Layout: React.FC<Props> = ({ children }) => {
     return (
-        <div className='dark:bg-gray-500 m-0 p-0 h-screen'>
-            <main className=''>
+        <div>
+            <main>
                 {children}
             </main>
         </div>
