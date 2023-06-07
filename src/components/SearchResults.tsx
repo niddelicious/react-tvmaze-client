@@ -72,7 +72,7 @@ const SearchResults: React.FC = () => {
     }, [query, navigate, decodedQuery]);
 
     return (
-        <div className="flex flex-row flex-wrap gap-1 justify-evenly ">
+        <div className="flex flex-row flex-wrap gap-2 justify-evenly ">
             {loading ? <div className="flex items-end gap-8"><Spinner className="h-12 w-12" /><p>{message}</p></div> : results.map(({ show }) => (
                 <ShowCard key={show.id} show={show} />
             ))}
