@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type SearchResult = {
     score: number;
@@ -12,25 +12,28 @@ type SearchResult = {
     };
 };
 
-type SearchResultsProps = {
-    query: string;
-};
-
-const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
+const SearchResults: React.FC = () => {
+    const { query } = useParams();
     const [results, setResults] = useState<SearchResult[]>([]);
     const navigate = useNavigate();
+    const decodedQuery = decodeURIComponent(query || '');
 
     useEffect(() => {
-        const fetchResults = async () => {
-            if (query) {
-                const response = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`);
-                const data = await response.json();
-                setResults(data);
-            }
-        };
+        if (!query) {
+            navigate('/');
+        }
+        else {
+            const fetchResults = async () => {
+                if (query) {
+                    const response = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    setResults(data);
+                }
+            };
 
-        fetchResults();
-    }, [query]);
+            fetchResults();
+        }
+    }, [query, navigate, decodedQuery]);
 
     return (
         <div>
