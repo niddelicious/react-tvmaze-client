@@ -1,8 +1,11 @@
+import { on } from 'events';
 import React, { useEffect, useState } from 'react';
 
 type SearchResultsProps = {
     query: string;
+    onShowClick: (showId: number | null) => void;
 };
+
 
 type SearchResult = {
     id: number;
@@ -10,8 +13,9 @@ type SearchResult = {
     thumbnail: string;
 };
 
-const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
+const SearchResults: React.FC<SearchResultsProps> = ({ query, onShowClick }) => {
     const [results, setResults] = useState<SearchResult[]>([]);
+    const [showId, setShowId] = useState('');
 
     useEffect(() => {
         const fetchResults = async () => {
@@ -30,12 +34,15 @@ const SearchResults: React.FC<SearchResultsProps> = ({ query }) => {
     }, [query]);
 
 
+    const handleResultClick = (result: SearchResult) => {
+        onShowClick(result.id);
+    };
 
     return (
         <div>
             {results.map((result: SearchResult) => (
                 <div key={result.id}>
-                    <img src={result.thumbnail} alt={result.name} />
+                    <img src={result.thumbnail} alt={result.name} onClick={() => handleResultClick(result)} />
                     {result.name}
                 </div>
             ))}
